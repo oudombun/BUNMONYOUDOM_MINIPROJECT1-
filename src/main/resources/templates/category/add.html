@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/master">
+<head>
+    <title>Add Data</title>
+</head>
+<div class="container" layout:fragment="content">
+    <div class="modal-dialog modal-notify modal-primary modal-lg" role="document">
+        <!--Content-->
+        <div class="modal-content ">
+            <!--Header-->
+            <div class="modal-header" style="display: block;">
+                <p class="heading lead text-center" th:text="#{article.add_new}" >Add Data</p>
+            </div>
+
+            <!--Body-->
+            <form action="/addcate" method="post" enctype="multipart/form-data" th:object="${categoryNew}">
+                <div class="modal-body text-center">
+                    <div class="row">
+                        <div class="col-md-3 md-form">
+
+                        </div>
+                        <div class="col-md-6 md-form">
+                            <input type="text" id="label-id" class="form-control" th:field="${categoryNew.id}" readonly="true">
+                            <label for="label-id" th:text="#{article.identifier}">id</label>
+                        </div>
+                        <div class="col-md-3 md-form">
+
+                        </div>
+                        <div class="col-md-3 md-form">
+
+                        </div>
+                        <div class="col-md-6 md-form">
+                            <input type="text" th:field="*{name}" th:value="${categoryNew.getName()}"  class="form-control">
+                            <label >
+                                <span th:text="#{category.title.label}">Category Name</span>
+                                <span th:if="${#fields.hasErrors('name')}" style="color: red;" th:text="#{err.catename}"> Author is required)</span>
+                            </label>
+                        </div>
+                        <div class="col-md-3 md-form">
+
+                        </div>
+                    </div>
+                </div>
+
+                <!--Footer-->
+                <div class="modal-footer justify-content-center" >
+                    <button type="button" class="btn btn-light" data-dismiss="modal" style="text-transform: capitalize;margin: 0 auto;">Close</button>
+                    <button type="submit" class="btn btn-primary" style="text-transform: capitalize;margin: 0 auto;">Save Change</button>
+                </div>
+            </form>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+</body>
+</html>

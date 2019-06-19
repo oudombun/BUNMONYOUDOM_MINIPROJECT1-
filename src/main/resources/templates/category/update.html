@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/master">
+<head>
+    <title>Update Data</title>
+</head>
+<body>
+<div class="container" layout:fragment="content">
+    <div class="modal-dialog modal-notify modal-success modal-lg" role="document" style="    margin-top: 20px;margin-bottom: 0;pointer-events: unset;">
+        <!--Content-->
+        <div class="modal-content ">
+            <!--Header-->
+            <div class="modal-header" style="display: block;">
+                <p class="heading lead text-center" th:text="#{article.update.label}">Update Data</p>
+            </div>
+
+
+            <!--Body-->
+            <form method="post" enctype="multipart/form-data" th:object="${category}" th:action="@{/update_cate}">
+
+                <div class="modal-body text-center">
+
+                    <div class="md-form">
+                        <input type="text" th:value="*{getId()}" th:field="${category.id}" id="label_id" class="form-control" readonly="true">
+                        <label for="label_id">id</label>
+                    </div>
+                    <div class="md-form">
+                        <input type="text" th:value="*{getName()}" th:field="${category.name}" id="label_title" class="form-control">
+                        <label for="label_id">catename</label>
+                    </div>
+
+                </div>
+
+                <!--Footer-->
+                <div class="modal-footer justify-content-center" >
+                    <a th:href="@{/}" type="button" class="btn btn-light" data-dismiss="modal" style="text-transform: capitalize;margin: 0 auto;">Back</a>
+                    <button  type="submit" class="btn btn-success" style="text-transform: capitalize;margin: 0 auto;">Save Change</button>
+                </div>
+            </form>
+            <!--/.Content-->
+        </div>
+    </div>
+</div>
+</body>
+</html>

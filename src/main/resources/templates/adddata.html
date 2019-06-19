@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/master">
+<head>
+    <title>Add Data</title>
+</head>
+<div class="container" layout:fragment="content">
+    <div class="modal-dialog modal-notify modal-primary modal-lg" role="document">
+        <!--Content-->
+        <div class="modal-content ">
+            <!--Header-->
+            <div class="modal-header" style="display: block;">
+                <p class="heading lead text-center" th:text="#{article.add_new}" >Add Data</p>
+            </div>
+
+            <!--Body-->
+            <form action="/add" method="post" enctype="multipart/form-data" th:object="${article}">
+                <div class="modal-body text-center">
+                    <div class="row">
+                        <div class="col-md-6 md-form">
+                            <!--<input type="text" id="label-id" class="form-control" th:field="${Article.id}" readonly="true">-->
+                            <input type="text" id="label-id" class="form-control" th:field="${article.id}" readonly="true">
+                            <label for="label-id" th:text="#{article.identifier}">id</label>
+                        </div>
+                        <div class="col-md-6 md-form">
+                            <input type="text" id="label-title" th:field="${article.title}" class="form-control">
+                            <label for="label-title">
+                                <span th:text="#{article.title.label}"></span>
+                                <span style="color:red;" th:if="${#fields.hasErrors('title')}"​ th:text="#{err.title}">Title is required</span>
+                            </label>
+                        </div>
+                        <div class="col-md-6 md-form">
+                            <input type="text" id="label-desc" th:field="*{desc}" th:value="${article.getDesc()}" class="form-control">
+                            <label for="label-desc">
+                                <span th:text="#{article.description.label}"></span>
+                                <span th:if="${#fields.hasErrors('desc')}" style="color: red;" th:text="#{err.des}"> Description length(5-20)</span> </label>
+                        </div>
+                        <div class="col-md-6 md-form">
+                            <input type="text" id="label-auth" th:field="*{author}" th:value="${article.getAuthor()}"  class="form-control">
+                            <label for="label-auth">
+                                <span th:text="#{article.author.label}"></span>
+                                <span th:if="${#fields.hasErrors('author')}" style="color: red;" th:text="#{err.author}"> Author is required)</span></label>
+                        </div>
+                        <div class="col-md-12 md-form">
+                            <select th:field="${article.category.id}" class="custom-select custom-select-sm" style="display: unset !IMPORTANT;margin: 15px 0 !important;">
+                                <!--<option th:value=""></option>-->
+                                <option
+                                        th:each="cate:${allCate}"
+                                        th:value="${cate.getId()}"
+                                        th:selected="${cate.getId() == article.getCategory().getId()}"
+                                        th:text="${cate.getName()}">
+                                </option>
+                            </select>
+                            <label class="active">
+                                Category
+                                <span th:if="${#fields.hasErrors('category')}" style="color: red;" th:text="#{err.catename}"> Category required</span></label>
+                            </label>
+                        </div>
+                        <!--input file-->
+                        <div class="col-md-12 file-field">
+                            <div class="btn btn-primary btn-sm float-left">
+                                <span th:text="#{article.choose_file}">Choose file</span>
+                                <input type="file" name="file"  id="file2">
+                            </div>
+                            <div class="file-path-wrapper">
+                                <input class="file-path validate" style=" border:none !important;border-bottom: 2px solid #4285f4 !important;margin-top: 5px !important;" type="text" placeholder="Upload your file">
+                            </div>
+                        </div>
+                        <img id="preview2" th:src="@{/image/default.png}" style="display: none;
+    margin: 0 auto;
+    width: 250px;height:  250px;">
+                    </div>
+                </div>
+
+                <!--Footer-->
+                <div class="modal-footer justify-content-center" >
+                    <a th:href="@{/}" type="button" class="btn btn-light" data-dismiss="modal" style="text-transform: capitalize;margin: 0 auto;">Close</a>
+                    <button type="submit" class="btn btn-primary" style="text-transform: capitalize;margin: 0 auto;">Save Change</button>
+                </div>
+            </form>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+</body>
+</html>

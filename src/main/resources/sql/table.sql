@@ -1,0 +1,14 @@
+CREATE TABLE tbl_categories(
+	id INT PRIMARY KEY auto_increment,
+	cate_name VARCHAR NOT NULL,
+	created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP
+);
+CREATE TABLE tbl_articles(
+	id INT PRIMARY KEY auto_increment,
+	title VARCHAR NOT NULL,
+	description TEXT NOT NULL,
+	author VARCHAR NOT NULL,
+	thumbnail VARCHAR NOT NULL,
+	created_at TIMESTAMP WITH TIME ZONE DEFAULT CURRENT_TIMESTAMP,
+	cate_id INT NOT NULL REFERENCES tbl_categories(id) ON DELETE CASCADE on UPDATE CASCADE
+);

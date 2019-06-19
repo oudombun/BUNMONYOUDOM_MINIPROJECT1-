@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/master">
+<head>
+    <title>Update Data</title>
+</head>
+<body>
+<div class="container" layout:fragment="content">
+    <div class="modal-dialog modal-notify modal-success modal-lg" role="document" style="    margin-top: 20px;margin-bottom: 0;pointer-events: unset;">
+        <!--Content-->
+        <div class="modal-content ">
+            <!--Header-->
+            <div class="modal-header" style="display: block;">
+                <p class="heading lead text-center" th:text="#{article.update.label}">Update Data</p>
+            </div>
+
+
+            <!--Body-->
+            <form method="post" enctype="multipart/form-data" th:object="${article}" th:action="@{/update}">
+
+                <div class="modal-body text-center">
+
+                    <div class="md-form">
+                        <input type="text" th:value="*{getId()}" th:field="${article.id}" id="label_id" class="form-control" readonly="true">
+                        <label for="label_id">id</label>
+                    </div>
+                    <div class="md-form">
+                        <input type="text" th:value="*{getTitle()}" th:field="${article.title}" id="label_title" class="form-control">
+                        <label for="label_title">Title <span  th:if="${#fields.hasErrors('title')}" style="color: red;" th:text="#{err.title}"> Title is required</span> </label>
+                    </div>
+                    <div class="md-form">
+                        <input type="text" th:value="*{getDesc()}" th:field="${article.desc}" id="label_desc" class="form-control">
+                        <label for="label_desc">Description <span th:if="${#fields.hasErrors('desc')}" style="color: red;" th:text="#{err.des}"> Description length(5-20)</span> </label>
+                    </div>
+                    <div class="md-form">
+                        <select th:field="${article.category.id}" class="custom-select custom-select-sm" style="display: unset !IMPORTANT;margin: 15px 0 !important;">
+                            <!--<option>Open this select menu</option>-->
+                            <option
+                                    th:each="cate:${allCate}"
+                                    th:value="${cate.getId()}"
+                                    th:selected="${cate.getId() == article.getCategory().getId()}"
+                                    th:text="${cate.getName()}">
+                            </option>
+                        </select>
+                        <label class="active">Category</label>
+                    </div>
+                    <div class="md-form">
+                        <input type="text" th:value="*{getAuthor()}" th:field="${article.author}" id="label_auth" class="form-control">
+                        <label for="label_auth">Author <span th:if="${#fields.hasErrors('author')}" style="color: red;" th:text="#{err.author}"> Author is required</span> </label>
+                    </div>
+                    <!--input file-->
+                    <div class="col-md-12 file-field">
+                        <div class="btn btn-success btn-sm float-left">
+                            <span th:text="#{article.choose_file}">Choose file</span>
+                            <input name="oldImg" th:value="*{getThumbnail()}" th:field="${article.thumbnail}" style="display:none;">
+                            <input type="file" name="file" id="file3">
+                        </div>
+                        <div class="file-path-wrapper">
+                            <input class="file-path validate" style=" border:none !important;border-bottom: 2px solid #00C851 !important;margin-top: 5px !important;" type="text" placeholder="Upload your file">
+                        </div>
+                    </div>
+                    <img id="preview3" th:src="@{/image/default.png}" style="display: none;
+    margin: 0 auto;
+    width: 250px;height:  250px;">
+                </div>
+
+                <!--Footer-->
+                <div class="modal-footer justify-content-center" >
+                    <a th:href="@{/}" type="button" class="btn btn-light" data-dismiss="modal" style="text-transform: capitalize;margin: 0 auto;">Back</a>
+                    <button  type="submit" class="btn btn-success" style="text-transform: capitalize;margin: 0 auto;">Save Change</button>
+                </div>
+            </form>
+            <!--/.Content-->
+        </div>
+    </div>
+</div>
+</body>
+</html>

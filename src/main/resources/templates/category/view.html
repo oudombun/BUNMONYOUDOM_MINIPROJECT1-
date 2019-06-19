@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/master">
+<head>
+    <title>View Data</title>
+</head>
+<body>
+<div class="container" layout:fragment="content">
+    <div class="modal-dialog modal-notify modal-warning modal-lg" role="document" style="    margin-top: 20px;margin-bottom: 0;pointer-events: unset;">
+        <!--Content-->
+        <div class="modal-content ">
+            <!--Header-->
+            <div class="modal-header" style="display: block;">
+                <p class="heading lead text-center" >View Data</p>
+            </div>
+
+            <!--Body-->
+            <div class="modal-body text-center">
+                <div class="container" th:object="${article}">
+                    <div class="row">
+                        <div class="col-md-6" style="text-align: right">
+                            <label th:text="#{article.identifier}">ID:</label>
+                        </div>
+                        <div class="col-md-6" style="text-align: left">
+                            <label th:text="*{getId()}"></label>
+                        </div>
+                        <div class="col-md-6" style="text-align: right">
+                            <label th:text="#{article.title.label}">Title:</label>
+                        </div>
+                        <div class="col-md-6" style="text-align: left">
+                            <label th:text="*{getTitle()}"></label>
+                        </div>
+                        <div class="col-md-6" style="text-align: right">
+                            <label th:text="#{article.description.label}">Description:</label>
+                        </div>
+                        <div class="col-md-6" style="text-align: left">
+                            <label th:text="*{getDesc()}">damn it</label>
+                        </div>
+                        <div class="col-md-6" style="text-align: right">
+                            <label th:text="#{article.author.label}">Author:</label>
+                        </div>
+                        <div class="col-md-6" style="text-align: left">
+                            <label th:text="*{getAuthor()}">Oudom</label>
+                        </div>
+                        <div class="col-md-12">
+                            <img  th:src="@{/image/{id}(id=*{getThumbnail()} ) }" style="    width: 100%;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!--Footer-->
+        <div class="modal-footer justify-content-center" >
+            <a href="/" type="button" class="btn btn-warning" style="text-transform: capitalize;margin: 0 auto;">Back</a>
+        </div>
+        <!--/.Content-->
+    </div>
+</div>
+</body>
+</html>

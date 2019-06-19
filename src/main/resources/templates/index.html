@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+      xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+      layout:decorator="layout/master">
+<head>
+    <title>Title</title>
+</head>
+<body>
+<div class="container" layout:fragment="content">
+    <!--add and switcher-->
+    <hr>
+    <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#addModal" th:text="#{article.add_new}">Add New</button>
+    <label class="switch">
+        <input type="checkbox" checked id="switchFragment">
+        <span class="slider round"></span>
+    </label>
+    <hr>
+    <form class="form-inline mr-auto" th:action="@{/}" method="get">
+        <input class="form-control" type="text" placeholder="Search" aria-label="Search" style="    width: 20%;
+    margin-right: 30px;
+    font-size: 13px;" th:value="${filter.getTitle()}" name="title">
+        <select th:name="cate_id" class="custom-select custom-select-sm" style="display: unset !IMPORTANT;margin: 15px 0 !important;">
+            <option value=""></option>
+            <option th:each="cate:${allCate}"
+                    th:value="${cate.getId()}"
+                    th:text="${cate.getName()}"
+                    th:selected="${filter.getCate_id() == cate.getId()}">
+            </option>
+        </select>
+        <button class="btn btn-primary btn-rounded btn-sm my-0 ml-sm-2" type="submit">Search</button>
+    </form>
+    <!--table-->
+    <table class="table">
+        <thead class="black white-text">
+        <tr>
+            <th scope="col" th:text="#{article.identifier}">#</th>
+            <th scope="col" th:text="#{article.title.label}">Title</th>
+            <th scope="col" th:text="#{article.description.label}">Description</th>
+            <th scope="col">Category</th>
+            <th scope="col" th:text="#{article.author.label}">Author</th>
+            <th scope="col" th:text="#{article.thumbnail.label}">Thumbnail</th>
+            <th scope="col" colspan="3"  th:text="#{article.action}">Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="art:${articles}">
+            <th style="vertical-align: inherit;" th:text="${art.getId()}"></th>
+            <th style="vertical-align: inherit;" th:text="${art.getTitle()}"></th>
+            <td style="vertical-align: inherit;" th:text="${art.getDesc()}"></td>
+            <td style="vertical-align: inherit;" th:text="${art.getCategory().getName()}"></td>
+            <td style="vertical-align: inherit;" th:text="${art.getAuthor()}"></td>
+            <td>
+                <img style="width: 100px;" th:src="@{/image/{id}(id=${art.getThumbnail()} ) }">
+            </td>
+            <td style="vertical-align: inherit;width: 1px;padding-right: 0;padding-left: 0;">
+                <a th:href="@{/update/{id}(id=${art.getId()})}" type="button" class="btn btn-success" th:text="#{article.update.label}">Update</a>
+            </td>
+            <td style="vertical-align: inherit;width: 1px;padding-right: 0;padding-left: 0;">
+                <a th:href="@{/view/{id}(id=${art.getId()})}" type="button" class="btn btn-warning" th:text="#{article.view.label}">View</a>
+            </td>
+            <td style="vertical-align: inherit;width: 1px;padding-right: 0;padding-left: 0;">
+                <a type="button" class="btn btn-danger" th:text="#{article.delete.label}" th:onclick="|deleteme(${art.getId()})|">Delete</a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <!--paginate-->
+    <div>
+        <p style="float: left;" th:text="#{totalcocunt}+' : ' +${total}"></p>
+    </div>
+    <div aria-label="Page navigation example" style="float:right;">
+        <ul class="pagination pagination-circle pg-dark" th:if="${paging.totalPages} >1">
+            <li class="page-item"><a  th:href="@{/(page=1,title=${filter.title},cate_id=${filter.cate_id})}" class="page-link">First</a></li>
+            <li class="page-item">
+                <a th:href="@{/(page=${paging.previousPage},title=${filter.title},cate_id=${filter.cate_id})}" class="page-link" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                    <span class="sr-only">Previous</span>
+                </a>
+            </li>
+            <!--<li class="page-item active"><a class="page-link">1</a></li>-->
+            <li th:each="i:${#numbers.sequence(paging.startPage,paging.endPage) }"  th:class="${paging.page}==${i}?'page-item active' : 'page-item' ">
+                    <a class="page-link" th:text="${i}" th:href="@{/(page=${i},title=${filter.title},cate_id=${filter.cate_id})}"></a>
+            </li>
+            <li class="page-item">
+                <a th:href="@{/(page=${paging.page}==${paging.endPage}?${paging.endPage}:${paging.nextPage},title=${filter.title},cate_id=${filter.cate_id})}" class="page-link" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                    <span class="sr-only">Next</span>
+                </a>
+            </li>
+            <li class="page-item"><a th:href="@{/(page=${paging.totalPages},title=${filter.title},cate_id=${filter.cate_id})}" class="page-link">Last</a></li>
+        </ul>
+    </div>
+    <!--modal -->
+    <div class="modal fade" id="addModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel"
+         aria-hidden="true">
+        <div class="modal-dialog modal-notify modal-primary modal-lg" role="document">
+            <!--Content-->
+            <div class="modal-content ">
+                <!--Header-->
+                <div class="modal-header" style="display: block;">
+                    <p class="heading lead text-center" th:text="#{article.add_new}">Add Data</p>
+                </div>
+
+                <!--Body-->
+                <form action="/add" method="post" enctype="multipart/form-data">
+                    <div class="modal-body text-center">
+                        <div class="row">
+                            <div class="col-md-6 md-form">
+                                <input type="text" id="label-id" class="form-control" th:field="${articleNew.id}" readonly="true">
+                                <label for="label-id" th:text="#{article.identifier}">id</label>
+                            </div>
+                            <div class="col-md-6 md-form">
+                                <input type="text" id="label-title" th:field="${articleNew.title}"class="form-control">
+                                <label for="label-title" th:text="#{article.title.label}" >Title</label>
+                            </div>
+                            <div class="col-md-6 md-form">
+                                <input type="text" id="label-desc"  th:field="${articleNew.desc}" class="form-control">
+                                <label for="label-desc" th:text="#{article.description.label}">Description</label>
+                            </div>
+                            <div class="col-md-6 md-form">
+                                <input type="text" id="label-auth" th:field="${articleNew.author}" class="form-control">
+                                <label for="label-auth" th:text="#{article.author.label}">Author</label>
+                            </div>
+                            <div class="col-md-12 md-form">
+                                <select th:field="${articleNew.category.id}" class="custom-select custom-select-sm" style="display: unset !IMPORTANT;margin: 15px 0 !important;">
+                                    <!--<option>Open this select menu</option>-->
+                                    <option
+                                            th:each="cate:${allCate}"
+                                            th:value="${cate.getId()}"
+                                            th:selected="${cate.getId() == articleNew.getCategory().getId()}"
+                                            th:text="${cate.getName()}">
+                                    </option>
+                                </select>
+                                <label class="active">Category</label>
+                            </div>
+                            <!--input file-->
+                            <div class="col-md-12 file-field">
+                                <div class="btn btn-primary btn-sm float-left">
+                                    <span th:text="#{article.choose_file}">Choose file</span>
+                                    <input type="file" name="file" id="file">
+                                </div>
+                                <div class="file-path-wrapper">
+                                    <input class="file-path validate" style=" border:none !important;border-bottom: 2px solid #4285f4 !important;margin-top: 5px !important;" type="text" placeholder="Upload your file">
+                                </div>
+                            </div>
+                            <img id="preview" th:src="@{/image/default.png}" style="display: none;
+    margin: 0 auto;
+    width: 250px;height:  250px;">
+                        </div>
+                    </div>
+
+                    <!--Footer-->
+                    <div class="modal-footer justify-content-center" >
+                        <button type="button" class="btn btn-light" data-dismiss="modal" style="text-transform: capitalize;margin: 0 auto;">Close</button>
+                        <button type="submit" class="btn btn-primary" style="text-transform: capitalize;margin: 0 auto;">Save Change</button>
+                    </div>
+                </form>
+            </div>
+            <!--/.Content-->
+        </div>
+    </div>
+</div>
+</body>
+</html>
